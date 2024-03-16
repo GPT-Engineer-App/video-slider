@@ -1,39 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { Box, Heading, VStack, Text, Flex, Spacer, IconButton } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, Heading, VStack, Text, Flex, IconButton, Textarea, Button } from "@chakra-ui/react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const videoUrls = [
-  "https://example.com/video1.mpr",
-  "https://example.com/video2.mpr",
-  "https://example.com/video3.mpr",
-  // Add more video URLs as needed
-];
+const VIDEOS_PER_PAGE = 50;
 
 const Index = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [videoUrls, setVideoUrls] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "ArrowLeft") {
-        goToPreviousVideo();
-      } else if (event.key === "ArrowRight") {
-        goToNextVideo();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
-  const goToPreviousVideo = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? videoUrls.length - 1 : prevIndex - 1));
+  const handlePasteVideos = (event) => {
+    const pastedUrls = event.target.value.split("\n").filter((url) => url.trim() !== "");
+    setVideoUrls(pastedUrls);
+    setCurrentPage(1);
   };
 
-  const goToNextVideo = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === videoUrls.length - 1 ? 0 : prevIndex + 1));
+  const totalPages = Math.ceil(videoUrls.length / VIDEOS_PER_PAGE);
+  const startIndex = (currentPage - 1) * VIDEOS_PER_PAGE;
+  const endIndex = startIndex + VIDEOS_PER_PAGE;
+  const currentVideos = videoUrls.slice(startIndex, endIndex);
+
+  const goToPreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const goToNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
   return (
@@ -43,13 +34,20 @@ const Index = () => {
           Video Player
         </Heading>
         <Text fontSize="xl" textAlign="center">
-          Use the arrow keys to navigate through the videos
+          Paste your video URLs below (one per line)
         </Text>
-        <Box as="video" src={videoUrls[currentIndex]} controls width="100%" height="auto" />
-        <Flex>
-          <IconButton icon={<FaArrowLeft />} aria-label="Previous Video" onClick={goToPreviousVideo} />
-          <Spacer />
-          <IconButton icon={<FaArrowRight />} aria-label="Next Video" onClick={goToNextVideo} />
+        <Textarea placeholder="Paste video URLs here..." rows={10} onChange={handlePasteVideos} />
+        <Flex flexWrap="wrap" justifyContent="center" gap={4}>
+          {currentVideos.map((url, index) => (
+            <Box key={index} as="video" src={url} controls width="300px" height="auto" />
+          ))}
+        </Flex>
+        <Flex justifyContent="center" alignItems="center">
+          <IconButton icon={<FaArrowLeft />} aria-label="Previous Page" onClick={goToPreviousPage} isDisabled={currentPage === 1} />
+          <Text mx={4}>
+            Page {currentPage} of {totalPages}
+          </Text>
+          <IconButton icon={<FaArrowRight />} aria-label="Next Page" onClick={goToNextPage} isDisabled={currentPage === totalPages} />
         </Flex>
       </VStack>
     </Box>
