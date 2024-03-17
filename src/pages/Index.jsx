@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Heading, VStack, Text, Flex, IconButton, Textarea, Button } from "@chakra-ui/react";
+import { Box, Heading, VStack, Text, Flex, IconButton, Textarea, Image } from "@chakra-ui/react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const VIDEOS_PER_PAGE = 50;
@@ -27,6 +27,12 @@ const Index = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
+  const [selectedVideo, setSelectedVideo] = useState(null);
+
+  const handleThumbnailClick = (url) => {
+    setSelectedVideo(url);
+  };
+
   return (
     <Box p={8}>
       <VStack spacing={8} align="stretch">
@@ -38,9 +44,7 @@ const Index = () => {
         </Text>
         <Textarea placeholder="Paste video URLs here..." rows={10} onChange={handlePasteVideos} />
         <Flex flexWrap="wrap" justifyContent="center" gap={4}>
-          {currentVideos.map((url, index) => (
-            <Box key={index} as="video" src={url} controls width="300px" height="auto" />
-          ))}
+          {selectedVideo ? <Box as="video" src={selectedVideo} controls width="100%" height="auto" /> : currentVideos.map((url, index) => <Image key={index} src={`${url}#t=5`} alt="Video Thumbnail" width="300px" height="auto" objectFit="cover" cursor="pointer" onClick={() => handleThumbnailClick(url)} />)}
         </Flex>
         <Flex justifyContent="center" alignItems="center">
           <IconButton icon={<FaArrowLeft />} aria-label="Previous Page" onClick={goToPreviousPage} isDisabled={currentPage === 1} />
