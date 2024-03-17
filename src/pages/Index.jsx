@@ -39,9 +39,7 @@ const Index = () => {
         <Textarea placeholder="Paste video URLs here..." rows={10} onChange={handlePasteVideos} />
         <Flex flexWrap="wrap" justifyContent="center" gap={4}>
           {currentVideos.map((url, index) => (
-            <Box key={index}>
-              <img src={`${url}#t=0.5`} alt={`Video ${index + 1}`} width="300px" height="169px" />
-            </Box>
+            <Box key={index} as="video" src={url} controls width="300px" height="auto" />
           ))}
         </Flex>
         <Flex justifyContent="center" alignItems="center">
