@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Box, Heading, VStack, Text, Flex, IconButton, Textarea, Button } from "@chakra-ui/react";
+import { Box, Heading, VStack, Text, Flex, IconButton, Textarea } from "@chakra-ui/react";
+import VideoThumbnail from "../components/VideoThumbnail";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const VIDEOS_PER_PAGE = 25;
@@ -38,8 +39,8 @@ const Index = () => {
         </Text>
         <Textarea placeholder="Paste video URLs here..." rows={10} onChange={handlePasteVideos} />
         <Flex flexWrap="wrap" justifyContent="center" gap={4}>
-          {videoUrls.slice((currentPage - 1) * VIDEOS_PER_PAGE, currentPage * VIDEOS_PER_PAGE).map((url, index) => (
-            <Box key={index} as="video" src={(currentPage - 1) * VIDEOS_PER_PAGE + index < videoUrls.length ? url : undefined} controls width="300px" height="auto" />
+          {currentVideos.map((url, index) => (
+            <VideoThumbnail key={index} url={url} />
           ))}
         </Flex>
         <Flex justifyContent="center" alignItems="center">
