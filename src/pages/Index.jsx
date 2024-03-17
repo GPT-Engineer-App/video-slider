@@ -38,8 +38,8 @@ const Index = () => {
         </Text>
         <Textarea placeholder="Paste video URLs here..." rows={10} onChange={handlePasteVideos} />
         <Flex flexWrap="wrap" justifyContent="center" gap={4}>
-          {currentVideos.map((url, index) => (
-            <Box key={index} as="video" src={url} controls width="300px" height="auto" />
+          {videoUrls.slice((currentPage - 1) * VIDEOS_PER_PAGE, currentPage * VIDEOS_PER_PAGE).map((url, index) => (
+            <Box key={index} as="video" src={(currentPage - 1) * VIDEOS_PER_PAGE + index < videoUrls.length ? url : undefined} controls width="300px" height="auto" />
           ))}
         </Flex>
         <Flex justifyContent="center" alignItems="center">
