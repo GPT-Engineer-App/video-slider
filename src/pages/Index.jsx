@@ -9,14 +9,8 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePasteVideos = (event) => {
-    const pastedData = event.target.value
-      .split("\n")
-      .map((line) => {
-        const [videoUrl, thumbnailUrl] = line.split(",").map((url) => url.trim());
-        return { videoUrl, thumbnailUrl };
-      })
-      .filter(({ videoUrl }) => videoUrl !== "");
-    setVideoUrls(pastedData);
+    const pastedUrls = event.target.value.split("\n").filter((url) => url.trim() !== "");
+    setVideoUrls(pastedUrls);
     setCurrentPage(1);
   };
 
@@ -42,10 +36,10 @@ const Index = () => {
         <Text fontSize="xl" textAlign="center">
           Paste your video URLs below (one per line)
         </Text>
-        <Textarea placeholder="Paste video URLs and thumbnail URLs here (one per line, separated by comma)..." rows={10} onChange={handlePasteVideos} />
+        <Textarea placeholder="Paste video URLs here..." rows={10} onChange={handlePasteVideos} />
         <Flex flexWrap="wrap" justifyContent="center" gap={4}>
-          {currentVideos.map(({ videoUrl, thumbnailUrl }, index) => (
-            <Box key={index} as="video" src={videoUrl} poster={thumbnailUrl} controls width="300px" height="auto" />
+          {currentVideos.map((url, index) => (
+            <Box key={index} as="video" src={url} controls width="300px" height="auto" />
           ))}
         </Flex>
         <Flex justifyContent="center" alignItems="center">
