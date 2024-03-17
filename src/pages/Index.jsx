@@ -29,25 +29,6 @@ const Index = () => {
 
   const [selectedVideo, setSelectedVideo] = useState(null);
 
-  const generateThumbnail = (videoUrl) => {
-    return new Promise((resolve) => {
-      const video = document.createElement("video");
-      video.setAttribute("src", videoUrl);
-      video.setAttribute("preload", "metadata");
-      video.addEventListener("loadedmetadata", () => {
-        video.currentTime = 5;
-      });
-      video.addEventListener("seeked", () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL());
-        video.remove();
-      });
-    });
-  };
-
   const handleThumbnailClick = (url) => {
     setSelectedVideo(url);
   };
@@ -63,7 +44,7 @@ const Index = () => {
         </Text>
         <Textarea placeholder="Paste video URLs here..." rows={10} onChange={handlePasteVideos} />
         <Flex flexWrap="wrap" justifyContent="center" gap={4}>
-          {selectedVideo ? <Box as="video" src={selectedVideo} controls width="100%" height="auto" /> : currentVideos.map((url, index) => <Image key={index} src={generateThumbnail(url)} alt="Video Thumbnail" width="300px" height="auto" objectFit="cover" cursor="pointer" onClick={() => handleThumbnailClick(url)} />)}
+          {selectedVideo ? <Box as="video" src={selectedVideo} controls width="100%" height="auto" /> : currentVideos.map((url, index) => <Image key={index} src={`${url}#t=5`} alt="Video Thumbnail" width="300px" height="auto" objectFit="cover" cursor="pointer" onClick={() => handleThumbnailClick(url)} />)}
         </Flex>
         <Flex justifyContent="center" alignItems="center">
           <IconButton icon={<FaArrowLeft />} aria-label="Previous Page" onClick={goToPreviousPage} isDisabled={currentPage === 1} />
