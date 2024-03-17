@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Heading, VStack, Text, Flex, IconButton, Textarea, Button } from "@chakra-ui/react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const VIDEOS_PER_PAGE = 50;
+const VIDEOS_PER_PAGE = 25;
 
 const Index = () => {
   const [videoUrls, setVideoUrls] = useState([]);
